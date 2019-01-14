@@ -6,14 +6,14 @@
 package pablotamayo.DiuStar;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 /**
@@ -29,12 +29,12 @@ public class Main extends Application {
         primaryStage.setTitle("DiuStar");
         primaryStage.setScene(scene);
         primaryStage.show();
-        Circle circleEye = new Circle(30, 45, 10);
-        Circle circleEye1 = new Circle(70, 45, 10);
-        Circle circleBall = new Circle(50, 50, 50, Color.RED);
-        root.getChildren().addAll(circleBall, circleEye, circleEye1);
-        
-        
+        //x-wing
+        Polygon formship1 = new Polygon(0, 0, 50, 50);
+        // Grupo nave
+        Group ship = new Group();
+        ship.getChildren().addAll(formship1);
+        root.getChildren().addAll(ship);
     }
 
     /**
