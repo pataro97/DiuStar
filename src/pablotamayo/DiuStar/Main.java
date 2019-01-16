@@ -5,9 +5,11 @@
  */
 package pablotamayo.DiuStar;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -25,10 +27,29 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 1200, 600);
         primaryStage.setTitle("DiuStar");
         primaryStage.setScene(scene);
         primaryStage.show();
+        //Imagen fondo
+        Image image1 = new Image(getClass().getResourceAsStream("imagenes/fondo.gif"));
+        ImageView imageView1 = new ImageView(image1);
+        imageView1.setFitHeight(600);
+        imageView1.setFitWidth(1200);
+        //Asteroide imagen
+        Image asteroid = new Image(getClass().getResourceAsStream("imagenes/asteroid.png"));
+        ImageView asteroid1 = new ImageView(asteroid);
+        asteroid1.setFitHeight(600);
+        asteroid1.setFitWidth(1200);
+        // Movimiento asteroides
+        int asteroidX = 1;
+        AnimationTimer animationAsteroid = new AnimationTimer(){
+          @Override
+          public void handle(long now){
+              asteroid1.setCenterX(asteroidX);
+              asteroidX++;
+          };
+        };
         //ship
         Polygon formship1 = new Polygon(new double[]{
             0, 40,
@@ -75,7 +96,10 @@ public class Main extends Application {
         // Grupo nave
         Group ship = new Group();
         ship.getChildren().addAll(formship1, formship2, formship3, formship4, formship5, formship6, formship7, formship8, formship9, formship10);
-        root.getChildren().addAll(ship);
+        // Tamaño nave
+        ship.setScaleX(0.7);
+        ship.setScaleY(0.7);
+        root.getChildren().addAll(imageView1, ship, asteroid1);
     }
 
     /**
