@@ -24,6 +24,11 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
     
+    // variables asteroides
+    int asteroidX = 0;
+    int asteroidX2 = 0;
+    //Variables fondo
+    float imageBackgroundX = 0;
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
@@ -33,23 +38,58 @@ public class Main extends Application {
         primaryStage.show();
         //Imagen fondo
         Image image1 = new Image(getClass().getResourceAsStream("imagenes/fondo.gif"));
-        ImageView imageView1 = new ImageView(image1);
-        imageView1.setFitHeight(600);
-        imageView1.setFitWidth(1200);
+        ImageView imageBackground = new ImageView(image1);
+        imageBackground.setFitHeight(600);
+        imageBackground.setFitWidth(1200);
         //Asteroide imagen
         Image asteroid = new Image(getClass().getResourceAsStream("imagenes/asteroid.png"));
         ImageView asteroid1 = new ImageView(asteroid);
         asteroid1.setFitHeight(600);
         asteroid1.setFitWidth(1200);
+        //Asteroide imagen2
+        Image asteroid3 = new Image(getClass().getResourceAsStream("imagenes/asteroid1.png"));
+        ImageView asteroid2 = new ImageView(asteroid3);
+        asteroid2.setFitHeight(600);
+        asteroid2.setFitWidth(1200);
         // Movimiento asteroides
-        int asteroidX = 1;
-        AnimationTimer animationAsteroid = new AnimationTimer(){
-          @Override
-          public void handle(long now){
-              asteroid1.setCenterX(asteroidX);
-              asteroidX++;
-          };
-        };
+            //Animacion asteroides primera imagen
+            AnimationTimer animationAsteroid = new AnimationTimer(){
+              @Override
+              public void handle(long now){
+                  asteroid1.setX(asteroidX);
+                  // if movimiento asteroides
+                  if (asteroidX == 0){
+                      asteroidX2 = 1200;
+                      asteroidX--;
+                  }else{
+                      asteroidX--;
+                  };
+                  
+              };
+            };
+            //Animacion asteroides segunda imagen
+            AnimationTimer animationAsteroid2 = new AnimationTimer(){
+              @Override
+              public void handle(long now){
+                  asteroid2.setX(asteroidX2);
+                  //if movimiento asteroides
+                if (asteroidX2 == 0) {
+                    asteroidX = 1200;
+                    asteroidX2--;
+                  }else{
+                  asteroidX2--;
+                };
+              };
+            };
+        //Background animation
+            AnimationTimer animationImageBackground = new AnimationTimer(){
+                @Override
+                public void handle(long now){
+                    imageBackground.setX(imageBackgroundX);
+                    
+                    imageBackgroundX -= 0.2;
+                };
+            };
         //ship
         Polygon formship1 = new Polygon(new double[]{
             0, 40,
@@ -99,7 +139,10 @@ public class Main extends Application {
         // Tamaño nave
         ship.setScaleX(0.7);
         ship.setScaleY(0.7);
-        root.getChildren().addAll(imageView1, ship, asteroid1);
+        root.getChildren().addAll(imageBackground, ship, asteroid1, asteroid2);
+        animationAsteroid.start();
+        animationAsteroid2.start();
+        animationImageBackground.start();
     }
 
     /**
