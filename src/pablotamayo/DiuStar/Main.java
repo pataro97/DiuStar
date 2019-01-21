@@ -29,6 +29,7 @@ public class Main extends Application {
     int asteroidX2 = 0;
     //Variables fondo
     float imageBackgroundX = 0;
+    float imageBackgroundX2 = 1199;
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
@@ -41,6 +42,11 @@ public class Main extends Application {
         ImageView imageBackground = new ImageView(image1);
         imageBackground.setFitHeight(600);
         imageBackground.setFitWidth(1200);
+        //Imagen fondo2
+        Image image2 = new Image(getClass().getResourceAsStream("imagenes/fondo2.gif"));
+        ImageView imageBackground2 = new ImageView(image2);
+        imageBackground2.setFitHeight(600);
+        imageBackground2.setFitWidth(1200);
         //Asteroide imagen
         Image asteroid = new Image(getClass().getResourceAsStream("imagenes/asteroid.png"));
         ImageView asteroid1 = new ImageView(asteroid);
@@ -81,13 +87,37 @@ public class Main extends Application {
                 };
               };
             };
-        //Background animation
+        //Background animation 1
             AnimationTimer animationImageBackground = new AnimationTimer(){
                 @Override
                 public void handle(long now){
                     imageBackground.setX(imageBackgroundX);
+                    System.out.print("imagen fondo1:");
+                    System.out.println(imageBackgroundX);
+                    System.out.print("imagen fondo2:");
+                    System.out.println(imageBackgroundX2);
+                    //if movimiento fondo
+                    if (imageBackgroundX < 0.1 && imageBackgroundX > 0){
+                        imageBackgroundX2 = 1199;
+                        imageBackgroundX -= 0.1;
+                    }else{
+                        imageBackgroundX -= 0.1;
+                    };
+                };
+            };
+            //Background animation 2
+            AnimationTimer animationImageBackground2 = new AnimationTimer(){
+                @Override
+                public void handle(long now){
+                    imageBackground2.setX(imageBackgroundX2);
+                    //if movimiento fondo
+                    if (imageBackgroundX2 < 0.1 && imageBackgroundX2 > 0){
+                        imageBackgroundX = 1199;
+                        imageBackgroundX2 -= 0.1;
+                    }else{
+                        imageBackgroundX2 -= 0.1 ;
+                    };
                     
-                    imageBackgroundX -= 0.2;
                 };
             };
         //ship
@@ -139,10 +169,15 @@ public class Main extends Application {
         // Tamaño nave
         ship.setScaleX(0.7);
         ship.setScaleY(0.7);
-        root.getChildren().addAll(imageBackground, ship, asteroid1, asteroid2);
+        //posicion nave inicio
+        ship.setLayoutY(200);
+        //Control nave
+        
+        root.getChildren().addAll(imageBackground, imageBackground2, ship, asteroid1, asteroid2);
         animationAsteroid.start();
         animationAsteroid2.start();
         animationImageBackground.start();
+        animationImageBackground2.start();
     }
 
     /**
