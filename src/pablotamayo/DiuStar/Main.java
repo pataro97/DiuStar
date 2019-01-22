@@ -11,9 +11,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import static javafx.scene.input.KeyCode.DOWN;
+import static javafx.scene.input.KeyCode.UP;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -30,6 +32,13 @@ public class Main extends Application {
     //Variables fondo
     float imageBackgroundX = 0;
     float imageBackgroundX2 = 1199;
+    //Nave eje Y
+    int naveEjeY = 200;
+    int naveEjeX = 0;
+    //Nave velocidad
+    int velocidad = 0;
+    //Nave velocidad X
+    int velocidadX = 0;
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
@@ -48,15 +57,15 @@ public class Main extends Application {
         imageBackground2.setFitHeight(600);
         imageBackground2.setFitWidth(1200);
         //Asteroide imagen
-        Image asteroid = new Image(getClass().getResourceAsStream("imagenes/asteroid.png"));
+        Image asteroid = new Image(getClass().getResourceAsStream("imagenes/asteroid4.png"));
         ImageView asteroid1 = new ImageView(asteroid);
         asteroid1.setFitHeight(600);
-        asteroid1.setFitWidth(1200);
+        asteroid1.setFitWidth(1201);
         //Asteroide imagen2
-        Image asteroid3 = new Image(getClass().getResourceAsStream("imagenes/asteroid1.png"));
+        Image asteroid3 = new Image(getClass().getResourceAsStream("imagenes/asteroid5.png"));
         ImageView asteroid2 = new ImageView(asteroid3);
         asteroid2.setFitHeight(600);
-        asteroid2.setFitWidth(1200);
+        asteroid2.setFitWidth(1201);
         // Movimiento asteroides
             //Animacion asteroides primera imagen
             AnimationTimer animationAsteroid = new AnimationTimer(){
@@ -92,10 +101,6 @@ public class Main extends Application {
                 @Override
                 public void handle(long now){
                     imageBackground.setX(imageBackgroundX);
-                    System.out.print("imagen fondo1:");
-                    System.out.println(imageBackgroundX);
-                    System.out.print("imagen fondo2:");
-                    System.out.println(imageBackgroundX2);
                     //if movimiento fondo
                     if (imageBackgroundX < 0.1 && imageBackgroundX > 0){
                         imageBackgroundX2 = 1199;
@@ -169,15 +174,48 @@ public class Main extends Application {
         // Tamaño nave
         ship.setScaleX(0.7);
         ship.setScaleY(0.7);
-        //posicion nave inicio
-        ship.setLayoutY(200);
-        //Control nave
         
+        //Animación nave movimiento eje Y
+        AnimationTimer animationShip = new AnimationTimer(){
+            @Override
+            public void handle(long now){
+                //suma de velocidad al eje Y de la nave
+                naveEjeY = naveEjeY + velocidad;
+                naveEjeX = naveEjeX + velocidadX;
+                ship.setLayoutY(naveEjeY);
+                ship.setLayoutX(naveEjeX);
+            };
+        };
+        //Control nave pulsa tecla
+        scene.setOnKeyPressed((KeyEvent pulsatecla) -> {
+           switch(pulsatecla.getCode()) {
+               case UP:
+                   //Pulsa tecla arriba
+                   velocidad = -5;
+               break;
+               case DOWN:
+                   //Pulsa tecla abajo
+                   velocidad = 5;
+               break;
+               case LEFT:
+                   //Pulsa tecla izquierda
+                   velocidadX = -5;
+               break;
+               case RIGHT:
+                   //Pulsa tecla derecha
+                   velocidadX = 5;
+           }
+        });
+        //Control nave no pulsa tecla
+        scene.setOnKeyReleased((KeyEvent sueltatecla) -> {
+            velocidad = 0;
+        });
         root.getChildren().addAll(imageBackground, imageBackground2, ship, asteroid1, asteroid2);
         animationAsteroid.start();
         animationAsteroid2.start();
         animationImageBackground.start();
         animationImageBackground2.start();
+        animationShip.start();
     }
 
     /**
