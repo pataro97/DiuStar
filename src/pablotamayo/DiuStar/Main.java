@@ -5,6 +5,7 @@
  */
 package pablotamayo.DiuStar;
 
+import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -27,18 +28,22 @@ import javafx.stage.Stage;
 public class Main extends Application {
     
     // variables asteroides
-    int asteroidX = 0;
-    int asteroidX2 = 0;
+    int asteroidX;
+    int asteroidX2;
     //Variables fondo
-    float imageBackgroundX = 0;
+    float imageBackgroundX;
     float imageBackgroundX2 = 1199;
     //Nave eje Y
     int naveEjeY = 200;
-    int naveEjeX = 0;
+    int naveEjeX;
     //Nave velocidad
-    int velocidad = 0;
+    int velocidad;
     //Nave velocidad X
-    int velocidadX = 0;
+    int velocidadX;
+    //Variable eje x agujero negro
+    float holeX = 1200;
+    //Variable eje y agujero negro
+    int holeY;
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
@@ -46,6 +51,17 @@ public class Main extends Application {
         primaryStage.setTitle("DiuStar");
         primaryStage.setScene(scene);
         primaryStage.show();
+        //Generar numero aleatorio
+        Random generadorNum = new Random();
+        //En este caso se está guardando el valor retornado en una variable
+        int numAleatorio = generadorNum.nextInt(399);
+        //Sumar 1 para que esté entre 1 y 400
+        numAleatorio++;
+        //Agujero negro
+        Image hole = new Image(getClass().getResourceAsStream("imagenes/a.gif"));
+        ImageView hole1 = new ImageView(hole);
+        hole1.setFitHeight(300);
+        hole1.setFitWidth(300);
         //Imagen fondo
         Image image1 = new Image(getClass().getResourceAsStream("imagenes/fondo.gif"));
         ImageView imageBackground = new ImageView(image1);
@@ -57,12 +73,12 @@ public class Main extends Application {
         imageBackground2.setFitHeight(600);
         imageBackground2.setFitWidth(1200);
         //Asteroide imagen
-        Image asteroid = new Image(getClass().getResourceAsStream("imagenes/asteroid4.png"));
+        Image asteroid = new Image(getClass().getResourceAsStream("imagenes/asteroid1.png"));
         ImageView asteroid1 = new ImageView(asteroid);
         asteroid1.setFitHeight(600);
         asteroid1.setFitWidth(1201);
         //Asteroide imagen2
-        Image asteroid3 = new Image(getClass().getResourceAsStream("imagenes/asteroid5.png"));
+        Image asteroid3 = new Image(getClass().getResourceAsStream("imagenes/asteroid2.png"));
         ImageView asteroid2 = new ImageView(asteroid3);
         asteroid2.setFitHeight(600);
         asteroid2.setFitWidth(1201);
@@ -125,7 +141,25 @@ public class Main extends Application {
                     
                 };
             };
-        //ship
+            //Agujero negro animación
+             AnimationTimer animationHole = new AnimationTimer(){
+                @Override
+                public void handle(long now){
+                    hole1.setX(holeX);
+                    //movimient x agujero negro
+                    if (holeX == -300){
+                        holeX = 1200;
+                        //Posición aleatoria eje Y agujero negro
+                        holeY = generadorNum.nextInt(400);
+                        hole1.setY(holeY);
+                    }else{
+                        holeX-=0.5;
+                    };
+
+                };
+            };
+        
+        //Forma nave
         Polygon formship1 = new Polygon(new double[]{
             0, 40,
             0, 70,
@@ -174,7 +208,6 @@ public class Main extends Application {
         // Tamaño nave
         ship.setScaleX(0.7);
         ship.setScaleY(0.7);
-        
         //Animación nave movimiento eje Y
         AnimationTimer animationShip = new AnimationTimer(){
             @Override
@@ -210,12 +243,14 @@ public class Main extends Application {
         scene.setOnKeyReleased((KeyEvent sueltatecla) -> {
             velocidad = 0;
         });
-        root.getChildren().addAll(imageBackground, imageBackground2, ship, asteroid1, asteroid2);
+        
+        root.getChildren().addAll(imageBackground, imageBackground2, ship, hole1, asteroid1, asteroid2);
         animationAsteroid.start();
         animationAsteroid2.start();
         animationImageBackground.start();
         animationImageBackground2.start();
         animationShip.start();
+        animationHole.start();
     }
 
     /**
