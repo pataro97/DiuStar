@@ -82,6 +82,7 @@ public class Main extends Application {
         ImageView asteroid2 = new ImageView(asteroid3);
         asteroid2.setFitHeight(600);
         asteroid2.setFitWidth(1201);
+        //-------------------------------------------------------------------------Animaciones-----------
         // Movimiento asteroides
             //Animacion asteroides primera imagen
             AnimationTimer animationAsteroid = new AnimationTimer(){
@@ -158,7 +159,12 @@ public class Main extends Application {
 
                 };
             };
-        
+        //-----------------------------------------------------Formas-------------------------------------
+        //rectangulo choque asteroides
+        Rectangle asteroidA = new Rectangle(1200, 95);
+        //rectangulo choque asteroides
+        Rectangle asteroidB = new Rectangle(1200, 95);
+        asteroidB.setLayoutY(515);
         //Forma nave
         Polygon formship1 = new Polygon(new double[]{
             0, 40,
@@ -208,6 +214,7 @@ public class Main extends Application {
         // Tamaño nave
         ship.setScaleX(0.7);
         ship.setScaleY(0.7);
+        //-------------------------------------------------------------------------------------------------
         //Animación nave movimiento eje Y
         AnimationTimer animationShip = new AnimationTimer(){
             @Override
@@ -244,7 +251,7 @@ public class Main extends Application {
             velocidad = 0;
         });
         
-        root.getChildren().addAll(imageBackground, imageBackground2, ship, hole1, asteroid1, asteroid2);
+        root.getChildren().addAll(imageBackground, imageBackground2, asteroidA, asteroidB, ship, hole1, asteroid1, asteroid2);
         animationAsteroid.start();
         animationAsteroid2.start();
         animationImageBackground.start();
