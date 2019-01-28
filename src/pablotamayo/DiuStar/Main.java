@@ -19,6 +19,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -57,6 +60,7 @@ public class Main extends Application {
         int numAleatorio = generadorNum.nextInt(399);
         //Sumar 1 para que esté entre 1 y 400
         numAleatorio++;
+        //-----------------------------------------------------------------------------imagenes----------
         //Agujero negro
         Image hole = new Image(getClass().getResourceAsStream("imagenes/a.gif"));
         ImageView hole1 = new ImageView(hole);
@@ -82,6 +86,84 @@ public class Main extends Application {
         ImageView asteroid2 = new ImageView(asteroid3);
         asteroid2.setFitHeight(600);
         asteroid2.setFitWidth(1201);
+        //-----------------------------------------------------Formas-------------------------------------
+        //rectangulo choque asteroides
+        Rectangle asteroidTop = new Rectangle(1200, 95);
+        //rectangulo choque asteroides
+        Rectangle asteroidDown = new Rectangle(1200, 95);
+        asteroidDown.setLayoutY(515);
+        //forma choque nave
+        Polygon formGlobal = new Polygon(new double[]{
+            0, 0,
+            90, 0,
+            90, 5,
+            35, 5,
+            35, 40,
+            90, 60,
+            35, 70,
+            35, 110,
+            90, 110,
+            90, 115,
+            0, 115});
+        //Forma nave
+        Polygon formship1 = new Polygon(new double[]{
+            0, 40,
+            0, 70,
+            90, 60,
+            90, 55});
+        Polygon formship2 = new Polygon(new double[]{
+            25, 50,
+            25, 62,
+            50, 55});
+        Polygon formship3 = new Polygon(new double[]{
+            10, 0,
+            30, 0,
+            30, 45,
+            0, 45});
+        Polygon formship4 = new Polygon(new double[]{
+            0, 65,
+            30, 65,
+            30, 115,
+            10, 115});
+        Polygon formship5 = new Polygon(new double[]{
+            15, 5,
+            25, 5,
+            25, 40,
+            5, 40});
+        Polygon formship6 = new Polygon(new double[]{
+            5, 70,
+            25, 70,
+            25, 110,
+            15, 110});
+        Rectangle formship7 = new Rectangle(10, 0, 70, 5);
+        Rectangle formship8 = new Rectangle(10, 110, 70, 5);
+        Rectangle formship9 = new Rectangle(80, 0, 5, 5);
+        Rectangle formship10 = new Rectangle(80, 110, 5, 5);
+        formship1.setFill(Color.GRAY);
+        formship3.setFill(Color.GRAY);
+        formship4.setFill(Color.GRAY);
+        formship5.setFill(Color.GRAY);
+        formship5.setStroke(Color.RED);
+        formship6.setFill(Color.GRAY);
+        formship6.setStroke(Color.RED);
+        formship9.setFill(Color.RED);
+        formship10.setFill(Color.RED);
+        //Visibilidad formas choque
+        formGlobal.setVisible(false);
+        asteroidTop.setVisible(false);
+        asteroidDown.setVisible(false);
+        // Grupo nave
+        Group ship = new Group();
+        ship.getChildren().addAll(formGlobal, formship1, formship2, formship3, formship4, formship5, formship6, formship7, formship8, formship9, formship10);
+        // Tamaño nave
+        ship.setScaleX(0.7);
+        ship.setScaleY(0.7);
+        //-------------------------------------------------------------------------------------------------texto
+        Text perdido = new Text("Destruido");
+        perdido.setFont(Font.font(100));
+        perdido.setX(400);
+        perdido.setY(250);
+        perdido.setFill(Color.RED);
         //-------------------------------------------------------------------------Animaciones-----------
         // Movimiento asteroides
             //Animacion asteroides primera imagen
@@ -159,63 +241,7 @@ public class Main extends Application {
 
                 };
             };
-        //-----------------------------------------------------Formas-------------------------------------
-        //rectangulo choque asteroides
-        Rectangle asteroidA = new Rectangle(1200, 95);
-        //rectangulo choque asteroides
-        Rectangle asteroidB = new Rectangle(1200, 95);
-        asteroidB.setLayoutY(515);
-        //Forma nave
-        Polygon formship1 = new Polygon(new double[]{
-            0, 40,
-            0, 70,
-            90, 60,
-            90, 55});
-        Polygon formship2 = new Polygon(new double[]{
-            25, 50,
-            25, 62,
-            50, 55});
-        Polygon formship3 = new Polygon(new double[]{
-            10, 0,
-            30, 0,
-            30, 45,
-            0, 45});
-        Polygon formship4 = new Polygon(new double[]{
-            0, 65,
-            30, 65,
-            30, 115,
-            10, 115});
-        Polygon formship5 = new Polygon(new double[]{
-            15, 5,
-            25, 5,
-            25, 40,
-            5, 40});
-        Polygon formship6 = new Polygon(new double[]{
-            5, 70,
-            25, 70,
-            25, 110,
-            15, 110});
-        Rectangle formship7 = new Rectangle(10, 0, 70, 5);
-        Rectangle formship8 = new Rectangle(10, 110, 70, 5);
-        Rectangle formship9 = new Rectangle(80, 0, 5, 5);
-        Rectangle formship10 = new Rectangle(80, 110, 5, 5);
-        formship1.setFill(Color.GRAY);
-        formship3.setFill(Color.GRAY);
-        formship4.setFill(Color.GRAY);
-        formship5.setFill(Color.GRAY);
-        formship5.setStroke(Color.RED);
-        formship6.setFill(Color.GRAY);
-        formship6.setStroke(Color.RED);
-        formship9.setFill(Color.RED);
-        formship10.setFill(Color.RED);
-        // Grupo nave
-        Group ship = new Group();
-        ship.getChildren().addAll(formship1, formship2, formship3, formship4, formship5, formship6, formship7, formship8, formship9, formship10);
-        // Tamaño nave
-        ship.setScaleX(0.7);
-        ship.setScaleY(0.7);
-        //-------------------------------------------------------------------------------------------------
-        //Animación nave movimiento eje Y
+         //Animación nave movimiento eje Y
         AnimationTimer animationShip = new AnimationTimer(){
             @Override
             public void handle(long now){
@@ -226,6 +252,21 @@ public class Main extends Application {
                 ship.setLayoutX(naveEjeX);
             };
         };
+//        //Animacion choque asteroides bordes
+        AnimationTimer animationColision = new AnimationTimer(){
+                @Override
+                public void handle(long now){
+                    //Colision asteroides arriba
+                    Shape shapeAsteroid1 = Shape.intersect(formGlobal, asteroidTop);
+                    boolean colisionTop = shapeAsteroid1.getBoundsInLocal().isEmpty();
+                    if (colisionTop == false){
+                      root.getChildren().addAll(perdido);
+                      animationShip.stop();
+                    };
+                };
+                
+            };
+        //------------------------------------------------------------------Controles
         //Control nave pulsa tecla
         scene.setOnKeyPressed((KeyEvent pulsatecla) -> {
            switch(pulsatecla.getCode()) {
@@ -251,13 +292,14 @@ public class Main extends Application {
             velocidad = 0;
         });
         
-        root.getChildren().addAll(imageBackground, imageBackground2, asteroidA, asteroidB, ship, hole1, asteroid1, asteroid2);
+        root.getChildren().addAll(imageBackground, imageBackground2, asteroidTop, asteroidDown, ship, hole1, asteroid1, asteroid2);
         animationAsteroid.start();
         animationAsteroid2.start();
         animationImageBackground.start();
         animationImageBackground2.start();
         animationShip.start();
         animationHole.start();
+        animationColision.start();
     }
 
     /**
