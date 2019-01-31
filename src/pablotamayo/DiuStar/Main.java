@@ -17,6 +17,7 @@ import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -117,6 +118,8 @@ public class Main extends Application {
         //rectangulo choque asteroides
         Rectangle asteroidDown = new Rectangle(1200, 95);
         asteroidDown.setLayoutY(515);
+        //circulo asteroide choque
+        Circle circleMeteor1 = new Circle(30, 25, 20);
         //forma choque nave
         Polygon formGlobal = new Polygon(new double[]{
             0, 0,
@@ -177,6 +180,10 @@ public class Main extends Application {
         formGlobal.setVisible(false);
         asteroidTop.setVisible(false);
         asteroidDown.setVisible(false);
+        circleMeteor1.setVisible(false);
+        //Grupo asteroide 1
+        Group meteorColision1 = new Group();
+        meteorColision1.getChildren().addAll(circleMeteor1, meteor1);
         // Grupo nave
         Group ship = new Group();
         ship.getChildren().addAll(formGlobal, formship1, formship2, formship3, formship4, formship5, formship6, formship7, formship8, formship9, formship10);
@@ -289,7 +296,7 @@ public class Main extends Application {
                 public void handle(long now){
                     //Animaciones giro asteroides
                     asteroidRotate1++;
-                    meteor1.setRotate(asteroidRotate1);
+                    meteorColision1.setRotate(asteroidRotate1);
                     meteor3.setRotate(asteroidRotate1);
                     meteor5.setRotate(asteroidRotate1);
                     //animación meteorito movimiento, aleatoriedad en eje Y y rebote
@@ -310,9 +317,21 @@ public class Main extends Application {
                             meteor1Y += 2;
                         };
                     }
-                    meteor1.setLayoutX(meteor1X);
-                    meteor1.setY(meteor1Y);
-                    
+                    //Colision meteorito arriba
+                    Shape shapeMeteor1 = Shape.intersect(circleMeteor1, asteroidTop);
+                    boolean colisionTop = shapeMeteor1.getBoundsInLocal().isEmpty();
+                    if (colisionTop == false){
+                      ramdomMeteor1Y = 0;
+                    };
+                    //Colision meteorito abajo
+                    Shape shapeMeteor2 = Shape.intersect(circleMeteor1, asteroidDown);
+                    boolean colisionDown = shapeMeteor2.getBoundsInLocal().isEmpty();
+                    if (colisionDown == false){
+                      ramdomMeteor1Y = 1;
+                    };
+                    meteorColision1.setLayoutX(meteor1X);
+                    meteorColision1.setLayoutY(meteor1Y);
+                    System.out.println(ramdomMeteor1Y);
                 };
         };
         //------------------------------------------------------------------Controles--------------------
@@ -340,7 +359,7 @@ public class Main extends Application {
         scene.setOnKeyReleased((KeyEvent) -> {
             velocidad = 0;
         });
-        root.getChildren().addAll(imageBackground, imageBackground2, asteroidTop, asteroidDown, ship, hole1, asteroid1, asteroid2, meteor5, meteor3, meteor1);
+        root.getChildren().addAll(imageBackground, imageBackground2, meteorColision1, asteroidTop, asteroidDown, ship, hole1, asteroid1, asteroid2, meteor5, meteor3);
         animationAsteroid.start();
         animationImageBackground.start();
         animationShip.start();
