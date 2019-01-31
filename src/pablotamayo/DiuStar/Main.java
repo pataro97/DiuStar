@@ -49,6 +49,12 @@ public class Main extends Application {
     int holeY;
     //rotacion asteroides
     int asteroidRotate1;
+    //Variables meteorito posicion x
+    int meteor1X = 1200;
+    //Variables meteorito posicion Y
+    int meteor1Y;
+    //resta o suma aleatoria eje Y meteorito
+    int ramdomMeteor1Y;
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
@@ -64,26 +70,27 @@ public class Main extends Application {
         ImageView hole1 = new ImageView(hole);
         hole1.setFitHeight(300);
         hole1.setFitWidth(300);
+        //posicion aleatoria inicio agujero
         holeY = generadorNum.nextInt(399)+1;
-        hole1.setY(holeY);
+        //posicion aleatoria inicio meteorito
+        meteor1Y = generadorNum.nextInt(300)+100;
+        //Numero aleatorio ente 0 y 1 para eje Y asteroide
+        ramdomMeteor1Y = generadorNum.nextInt(2);
         //Meteorito tipo 1
         Image meteor = new Image(getClass().getResourceAsStream("imagenes/meteor.png"));
         ImageView meteor1 = new ImageView(meteor);
         meteor1.setFitHeight(50);
         meteor1.setFitWidth(50);
-        meteor1.setLayoutY(300);
         //meteorito tipo 2
         Image meteor2 = new Image(getClass().getResourceAsStream("imagenes/meteor2.png"));
         ImageView meteor3 = new ImageView(meteor2);
         meteor3.setFitHeight(50);
         meteor3.setFitWidth(50);
-        meteor3.setLayoutY(350);
         //Meteorito tipo 3
         Image meteor4 = new Image(getClass().getResourceAsStream("imagenes/meteor3.png"));
         ImageView meteor5 = new ImageView(meteor4);
         meteor5.setFitHeight(50);
         meteor5.setFitWidth(50);
-        meteor5.setLayoutY(400);
         //Imagen fondo
         Image image1 = new Image(getClass().getResourceAsStream("imagenes/fondo.gif"));
         ImageView imageBackground = new ImageView(image1);
@@ -239,7 +246,7 @@ public class Main extends Application {
                     if (holeX == -300){
                         holeX = 1200;
                         //Posición aleatoria eje Y agujero negro
-                        holeY = generadorNum.nextInt(399+1);
+                        holeY = generadorNum.nextInt(399)+1;
                         hole1.setY(holeY);
                     }else{
                         holeX-=0.5;
@@ -268,16 +275,44 @@ public class Main extends Application {
                       root.getChildren().addAll(perdido);
                       animationShip.stop();
                     };
+                    //Colision asteroides abajo
+                    Shape shapeAsteroid2 = Shape.intersect(formGlobal, asteroidDown);
+                    boolean colisionDown = shapeAsteroid2.getBoundsInLocal().isEmpty();
+                    if (colisionDown == false){
+                      root.getChildren().addAll(perdido);
+                      animationShip.stop();
+                    };
                 };
             };
-        //Animaciones giro asteroides
-        AnimationTimer asteroidRotate = new AnimationTimer(){
+        AnimationTimer asteroiAnimation = new AnimationTimer(){
             @Override
                 public void handle(long now){
+                    //Animaciones giro asteroides
                     asteroidRotate1++;
                     meteor1.setRotate(asteroidRotate1);
                     meteor3.setRotate(asteroidRotate1);
                     meteor5.setRotate(asteroidRotate1);
+                    //animación meteorito movimiento, aleatoriedad en eje Y y rebote
+                    //animacion en posición x
+                    if (meteor1X < -50){
+                        meteor1X = 1200;
+                        //posicion aleatoria en pantalla eje Y entre 100 y 400
+                        meteor1Y = generadorNum.nextInt(300)+100;
+                        //Numero aleatorio ente 0 y 1 para 
+                        ramdomMeteor1Y = generadorNum.nextInt(2);
+                        
+                    }else{
+                        meteor1X -= 2;
+                        //Resta o suma dependiendo del numero aleatorio
+                        if (ramdomMeteor1Y == 1){
+                            meteor1Y -= 2;
+                        }else{
+                            meteor1Y += 2;
+                        };
+                    }
+                    meteor1.setLayoutX(meteor1X);
+                    meteor1.setY(meteor1Y);
+                    
                 };
         };
         //------------------------------------------------------------------Controles--------------------
@@ -305,13 +340,13 @@ public class Main extends Application {
         scene.setOnKeyReleased((KeyEvent) -> {
             velocidad = 0;
         });
-        root.getChildren().addAll(imageBackground, imageBackground2, meteor5, meteor3, meteor1, asteroidTop, asteroidDown, ship, hole1, asteroid1, asteroid2);
+        root.getChildren().addAll(imageBackground, imageBackground2, asteroidTop, asteroidDown, ship, hole1, asteroid1, asteroid2, meteor5, meteor3, meteor1);
         animationAsteroid.start();
         animationImageBackground.start();
         animationShip.start();
         animationHole.start();
         animationColision.start();
-        asteroidRotate.start();
+        asteroiAnimation.start();
     }
 
     /**
