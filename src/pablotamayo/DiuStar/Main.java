@@ -5,6 +5,7 @@
  */
 package pablotamayo.DiuStar;
 
+import java.io.File;
 import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -16,6 +17,9 @@ import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -295,7 +299,7 @@ public class Main extends Application {
         ship.setScaleX(0.7);
         ship.setScaleY(0.7);
         //-------------------------------------------------------------------------------------------------texto
-        Text perdido = new Text("Destruido");
+        Text perdido = new Text("Game Over");
         perdido.setFont(Font.font(100));
         perdido.setX(400);
         perdido.setY(250);
@@ -311,6 +315,17 @@ public class Main extends Application {
         marcadorText.setY(50);
         marcadorText.setX(150);
         marcadorText.setFill(Color.RED);
+        //Música
+        Media media = new Media(getClass().getResource("sounds/sound.mp3").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setAutoPlay(true);
+        //------------------------------------------Musica Juego
+        mediaPlayer.play();
+        //Música explosion
+        Media mediaex = new Media(getClass().getResource("sounds/explosion.mp3").toExternalForm());
+        MediaPlayer mediaPlayerEx = new MediaPlayer(mediaex);
+        
+        
         //-------------------------------------------------------------------------Animaciones-----------
         // Movimiento asteroides
             //Animacion asteroides
@@ -340,6 +355,7 @@ public class Main extends Application {
             AnimationTimer animationImageBackground = new AnimationTimer(){
                 @Override
                 public void handle(long now){
+                    //-------------------------
                     imageBackground.setX(imageBackgroundX);
                     //if movimiento fondo
                     if (imageBackgroundX < 0.1 && imageBackgroundX > 0){
@@ -393,13 +409,13 @@ public class Main extends Application {
                     Shape shapeHole = Shape.intersect(formGlobal, holeCircle);
                     boolean abHole = shapeHole.getBoundsInLocal().isEmpty();
                     if (abHole == false){
-                      if(naveEjeY > holeY -150){
+                      if(naveEjeY > holeY +100){
                           naveEjeY--;
                       }else{
                           naveEjeY++;
                       };
                     };
-                    //Absorcion agujero negro eje Y
+                    //Absorcion agujero negro eje X
                     Shape shapeHoleX = Shape.intersect(formGlobal, holeCircle);
                     boolean abHoleX = shapeHoleX.getBoundsInLocal().isEmpty();
                     if (abHoleX == false){
@@ -417,6 +433,8 @@ public class Main extends Application {
                         animationShip.stop();
                         animationAsteroid.stop();
                         animationImageBackground.stop();
+                        //------------------------------------------Parar Musica
+                        mediaPlayer.stop();
                         this.stop();
                     };
                 };
@@ -436,6 +454,10 @@ public class Main extends Application {
                         animationAsteroid.stop();
                         animationImageBackground.stop();
                         animationHole.stop();
+                        //------------------------------------------Parar Musica
+                        mediaPlayer.stop();
+                        //Explosion
+                        mediaPlayerEx.play();
                         this.stop();
                     };
                     //Colision asteroides abajo
@@ -448,6 +470,10 @@ public class Main extends Application {
                         animationAsteroid.stop();
                         animationImageBackground.stop();
                         animationHole.stop();
+                        //------------------------------------------Parar Musica
+                        mediaPlayer.stop();
+                        //Explosion
+                        mediaPlayerEx.play();
                         this.stop();
                     };
                     //Limite izquierda
@@ -505,6 +531,10 @@ public class Main extends Application {
                         animationImageBackground.stop();
                         animationHole.stop();
                         animationColision.stop();
+                        //------------------------------------------Parar Musica
+                        mediaPlayer.stop();
+                        //Explosion
+                        mediaPlayerEx.play();
                         this.stop();
                     };
                     //--------------------------------colisión tiro nave enemiga
@@ -517,6 +547,10 @@ public class Main extends Application {
                         animationImageBackground.stop();
                         animationHole.stop();
                         animationColision.stop();
+                        //------------------------------------------Parar Musica
+                        mediaPlayer.stop();
+                        //Explosion
+                        mediaPlayerEx.play();
                         this.stop();
                     };
                     //------------------------------------Disparo
@@ -597,6 +631,10 @@ public class Main extends Application {
                         animationHole.stop();
                         animationColision.stop();
                         animationEnemyShip.stop();
+                        //------------------------------------------Parar Musica
+                        mediaPlayer.stop();
+                        //Explosion
+                        mediaPlayerEx.play();
                         this.stop();
                     };
                     //--------------------------colision de meteoritos entre meteorito 1 y 2
@@ -666,6 +704,10 @@ public class Main extends Application {
                     boolean meteorColisionS2 = shapeAsteroid2s3.getBoundsInLocal().isEmpty();
                     if (meteorColisionS2 == false){
                       root.getChildren().addAll(perdido);
+                      //------------------------------------------Parar Musica
+                      mediaPlayer.stop();
+                      //Explosion
+                       mediaPlayerEx.play();
                       this.stop();
                         explosion2.setVisible(true);
                         animationShip.stop();
@@ -737,6 +779,10 @@ public class Main extends Application {
                         animationHole.stop();
                         animationColision.stop();
                         animationEnemyShip.stop();
+                        //------------------------------------------Parar Musica
+                        mediaPlayer.stop();
+                        //Explosion
+                        mediaPlayerEx.play();
                         this.stop();
                     };
                     meteorColision3.setLayoutX(meteor3X);
@@ -830,6 +876,11 @@ public class Main extends Application {
                     meteor3Y = generadorNum.nextInt(300)+100;
                     //Velocidad aleatoria de inicio asteroide 3
                     velocidadMeteorid3 = generadorNum.nextInt(3)+1;
+                    //Explosion
+                    mediaPlayer.play();
+                    //Explosion
+                    mediaPlayerEx.stop();
+                    
                break;
            }
         });
