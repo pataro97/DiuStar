@@ -5,7 +5,6 @@
  */
 package pablotamayo.DiuStar;
 
-import java.io.File;
 import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -18,8 +17,8 @@ import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -35,6 +34,9 @@ import javafx.stage.Stage;
  * @author usuario
  */
 public class Main extends Application {
+    //ancho de pantalla y alto mediante constantes
+    final int ANCHO_PANTALLA = 1200;
+    final int ALTO_PANTALLA = 600;
     // variables asteroides
     int asteroidX;
     int asteroidX2;
@@ -79,8 +81,8 @@ public class Main extends Application {
     //Variable meteorito posicion Y
     int meteor2Y;
     //resta o suma aleatoria eje Y meteorito
-    //velocidad
     int ramdomMeteor2Y;
+    //velocidad
     int velocidadMeteorid2;
     //---------------------------------------Variables meteorito 3
     //Variable meteorito posicion x
@@ -88,16 +90,17 @@ public class Main extends Application {
     //Variable meteorito posicion Y
     int meteor3Y;
     //resta o suma aleatoria eje Y meteorito
-    //velocidad
     int ramdomMeteor3Y;
+    //velocidad
     int velocidadMeteorid3;
-    //Score
-    int score;
+    //Marcador
     int marcador;
+    //Estado chocque
+    boolean estado = true;
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
-        Scene scene = new Scene(root, 1200, 600);
+        Scene scene = new Scene(root, ANCHO_PANTALLA, ALTO_PANTALLA);
         primaryStage.setTitle("DiuStar");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -319,13 +322,10 @@ public class Main extends Application {
         Media media = new Media(getClass().getResource("sounds/sound.mp3").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);
-        //------------------------------------------Musica Juego
         mediaPlayer.play();
-        //Música explosion
+        //sonido explosion
         Media mediaex = new Media(getClass().getResource("sounds/explosion.mp3").toExternalForm());
-        MediaPlayer mediaPlayerEx = new MediaPlayer(mediaex);
-        
-        
+        MediaPlayer mediaPlayerEx = new MediaPlayer(mediaex);  
         //-------------------------------------------------------------------------Animaciones-----------
         // Movimiento asteroides
             //Animacion asteroides
@@ -346,11 +346,10 @@ public class Main extends Application {
                     asteroidX = 1200;
                     asteroidX2--;
                   }else{
-                  asteroidX2--;
+                    asteroidX2--;
                 };
               };
             };
-            
         //Background animation
             AnimationTimer animationImageBackground = new AnimationTimer(){
                 @Override
@@ -372,6 +371,8 @@ public class Main extends Application {
                     }else{
                         imageBackgroundX2 -= 0.1 ;
                     };
+                    //-----------------------------------------------------------------Marcador
+                    marcador ++;
                 };
             };
             //Animación nave movimiento
@@ -383,8 +384,6 @@ public class Main extends Application {
                     naveEjeX = naveEjeX + velocidadX;
                     ship.setLayoutY(naveEjeY);
                     ship.setLayoutX(naveEjeX);
-                    //Marcador-------------------
-                    marcador ++;
                     marcadorText.setText(String.valueOf(marcador));
                 };
                 
@@ -419,7 +418,7 @@ public class Main extends Application {
                     Shape shapeHoleX = Shape.intersect(formGlobal, holeCircle);
                     boolean abHoleX = shapeHoleX.getBoundsInLocal().isEmpty();
                     if (abHoleX == false){
-                      if(naveEjeX > holeX -100){
+                      if(naveEjeX > holeX +100){
                           naveEjeX--;
                       }else{
                           naveEjeX++;
@@ -429,13 +428,10 @@ public class Main extends Application {
                     Shape shapeHoleC = Shape.intersect(formGlobal, holeCircleCenter);
                     boolean centerHole = shapeHoleC.getBoundsInLocal().isEmpty();
                     if (centerHole == false){
-                        root.getChildren().addAll(perdido);
-                        animationShip.stop();
-                        animationAsteroid.stop();
-                        animationImageBackground.stop();
-                        //------------------------------------------Parar Musica
-                        mediaPlayer.stop();
-                        this.stop();
+                        if (estado == true){
+                            estado = false;
+                        }
+                        
                     };
                 };
             };
@@ -448,33 +444,17 @@ public class Main extends Application {
                     Shape shapeAsteroid1 = Shape.intersect(formGlobal, asteroidTop);
                     boolean colisionTop = shapeAsteroid1.getBoundsInLocal().isEmpty();
                     if (colisionTop == false){
-                        root.getChildren().addAll(perdido);
-                        explosion2.setVisible(true);
-                        animationShip.stop();
-                        animationAsteroid.stop();
-                        animationImageBackground.stop();
-                        animationHole.stop();
-                        //------------------------------------------Parar Musica
-                        mediaPlayer.stop();
-                        //Explosion
-                        mediaPlayerEx.play();
-                        this.stop();
+                        if (estado == true){
+                            estado = false;
+                        }
                     };
                     //Colision asteroides abajo
                     Shape shapeAsteroid2 = Shape.intersect(formGlobal, asteroidDown);
                     boolean colisionDown = shapeAsteroid2.getBoundsInLocal().isEmpty();
                     if (colisionDown == false){
-                        root.getChildren().addAll(perdido);
-                        explosion2.setVisible(true);
-                        animationShip.stop();
-                        animationAsteroid.stop();
-                        animationImageBackground.stop();
-                        animationHole.stop();
-                        //------------------------------------------Parar Musica
-                        mediaPlayer.stop();
-                        //Explosion
-                        mediaPlayerEx.play();
-                        this.stop();
+                        if (estado == true){
+                            estado = false;
+                        }
                     };
                     //Limite izquierda
                     Shape shapeLine = Shape.intersect(formGlobal, limitLeft);
@@ -524,34 +504,17 @@ public class Main extends Application {
                     Shape shapeEnemy = Shape.intersect(formGlobal, formGlobalEnemy);
                     boolean enemyColision = shapeEnemy.getBoundsInLocal().isEmpty();
                     if (enemyColision == false){
-                      root.getChildren().addAll(perdido);
-                      explosion2.setVisible(true);
-                      animationShip.stop();
-                        animationAsteroid.stop();
-                        animationImageBackground.stop();
-                        animationHole.stop();
-                        animationColision.stop();
-                        //------------------------------------------Parar Musica
-                        mediaPlayer.stop();
-                        //Explosion
-                        mediaPlayerEx.play();
-                        this.stop();
+                      if (estado == true){
+                            estado = false;
+                        }
                     };
                     //--------------------------------colisión tiro nave enemiga
                     Shape shapeShot = Shape.intersect(formGlobal, enemyShot);
                     boolean enemyShotA = shapeShot.getBoundsInLocal().isEmpty();
                     if (enemyShotA == false){
-                      root.getChildren().addAll(perdido);
-                      explosion2.setVisible(true);
-                      animationShip.stop();
-                        animationImageBackground.stop();
-                        animationHole.stop();
-                        animationColision.stop();
-                        //------------------------------------------Parar Musica
-                        mediaPlayer.stop();
-                        //Explosion
-                        mediaPlayerEx.play();
-                        this.stop();
+                      if (estado == true){
+                            estado = false;
+                        }
                     };
                     //------------------------------------Disparo
                     if(enemyShipY == ramdomEnemyShot){
@@ -622,20 +585,9 @@ public class Main extends Application {
                     Shape shapeAsteroid1s3 = Shape.intersect(formGlobal, circleMeteor1);
                     boolean meteorColision = shapeAsteroid1s3.getBoundsInLocal().isEmpty();
                     if (meteorColision == false){
-                      root.getChildren().addAll(perdido);
-                      explosion2.setVisible(true);
-                      animationShip.stop();
-                      animationShip.stop();
-                        animationAsteroid.stop();
-                        animationImageBackground.stop();
-                        animationHole.stop();
-                        animationColision.stop();
-                        animationEnemyShip.stop();
-                        //------------------------------------------Parar Musica
-                        mediaPlayer.stop();
-                        //Explosion
-                        mediaPlayerEx.play();
-                        this.stop();
+                      if (estado == true){
+                            estado = false;
+                        }
                     };
                     //--------------------------colision de meteoritos entre meteorito 1 y 2
                     Shape shapeAsteroid4s1 = Shape.intersect(circleMeteor1, circleMeteor2);
@@ -703,19 +655,9 @@ public class Main extends Application {
                     Shape shapeAsteroid2s3 = Shape.intersect(formGlobal, circleMeteor2);
                     boolean meteorColisionS2 = shapeAsteroid2s3.getBoundsInLocal().isEmpty();
                     if (meteorColisionS2 == false){
-                      root.getChildren().addAll(perdido);
-                      //------------------------------------------Parar Musica
-                      mediaPlayer.stop();
-                      //Explosion
-                       mediaPlayerEx.play();
-                      this.stop();
-                        explosion2.setVisible(true);
-                        animationShip.stop();
-                        animationAsteroid.stop();
-                        animationImageBackground.stop();
-                        animationHole.stop();
-                        animationColision.stop();
-                        animationEnemyShip.stop();
+                      if (estado == true){
+                            estado = false;
+                        }
                         
                     };
                     meteorColision2.setLayoutX(meteor2X);
@@ -771,24 +713,43 @@ public class Main extends Application {
                     Shape shapeAsteroid3s3 = Shape.intersect(formGlobal, circleMeteor3);
                     boolean meteorColisionS3 = shapeAsteroid3s3.getBoundsInLocal().isEmpty();
                     if (meteorColisionS3 == false){
-                      root.getChildren().addAll(perdido);
-                        explosion2.setVisible(true);
-                        animationShip.stop();
-                        animationAsteroid.stop();
-                        animationImageBackground.stop();
-                        animationHole.stop();
-                        animationColision.stop();
-                        animationEnemyShip.stop();
-                        //------------------------------------------Parar Musica
-                        mediaPlayer.stop();
-                        //Explosion
-                        mediaPlayerEx.play();
-                        this.stop();
+                      if (estado == true){
+                            estado = false;
+                        }
+                        
                     };
                     meteorColision3.setLayoutX(meteor3X);
                     meteorColision3.setLayoutY(meteor3Y);
                 };
         };
+        //Parar juego si hay colision
+         AnimationTimer animationestado = new AnimationTimer(){
+            @Override
+                public void handle(long now){
+                    if (estado == false){
+                        //Mostrar cartel
+                        root.getChildren().addAll(perdido);
+                        //Mostrar imagen explosion
+                        explosion2.setVisible(true);
+                        //------------------------------------------Parar Musica
+                        mediaPlayer.stop();
+                        //iniciar Explosion
+                        mediaPlayerEx.play();
+                        //parar animaciones
+                        animationShip.stop();
+                        animationAsteroid.stop();
+                        animationImageBackground.stop();
+                        animationHole.stop();
+                        animationColision.stop();
+                        asteroiAnimation.stop();
+                        animationEnemyShip.stop();
+                        this.stop();
+                        
+                    };
+                    System.out.println(estado);
+                };
+                
+         };
         
         //------------------------------------------------------------------Controles--------------------
         //Control nave pulsa tecla
@@ -811,6 +772,7 @@ public class Main extends Application {
                    velocidadX = 5;
                 break;
                case ENTER:
+                  if (estado == false){
                    marcador = 0;
                    root.getChildren().remove(perdido);
                    explosion2.setVisible(false);
@@ -822,6 +784,7 @@ public class Main extends Application {
                     animationColision.start();
                     asteroiAnimation.start();
                     animationEnemyShip.start();
+                    animationestado.start();
                     // variables asteroides
                     asteroidX = 0;
                     asteroidX2 = 0;
@@ -876,10 +839,12 @@ public class Main extends Application {
                     meteor3Y = generadorNum.nextInt(300)+100;
                     //Velocidad aleatoria de inicio asteroide 3
                     velocidadMeteorid3 = generadorNum.nextInt(3)+1;
-                    //Explosion
+                    //musica
                     mediaPlayer.play();
                     //Explosion
                     mediaPlayerEx.stop();
+                    estado = true;
+                  };
                     
                break;
            }
@@ -888,6 +853,7 @@ public class Main extends Application {
         scene.setOnKeyReleased((KeyEvent) -> {
             velocidad = 0;
         });
+        
         root.getChildren().addAll(imageBackground, imageBackground2, ship, enemyShip, meteorColision1, meteorColision2, meteorColision3, asteroidTop, asteroidDown, holeColision, asteroid1, asteroid2, marcadorScore, marcadorText);
         animationAsteroid.start();
         animationImageBackground.start();
@@ -896,6 +862,7 @@ public class Main extends Application {
         animationColision.start();
         asteroiAnimation.start();
         animationEnemyShip.start();
+        animationestado.start();
     }
     /**
      * @param args the command line arguments
